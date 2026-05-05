@@ -72,6 +72,22 @@ func (c *Client) ReadFile(path string) ([]byte, error) {
 	return out, nil
 }
 
+// RunCommand executes a command on the remote host and returns its combined
+// stdout output. The session is closed automatically when the command finishes.
+func (c *Client) RunCommand(cmd string) ([]byte, error) {
+	sess, err := c.client.NewSession()
+	if err != nil {
+		return nil, fmt.Errorf("new session: %w", err)
+	}
+	defer sess.Close()
+
+	out, err := sess.Output(cmd)
+	if err != nil {
+		return nil, fmt.Errorf("run command %q on %s: %w", cmd, c.host, err)
+	}
+	return out, nil
+}
+
 // Close terminates the underlying SSH connection.
 func (c *Client) Close() error {
 	return c.client.Close()
