@@ -75,6 +75,13 @@ func TestHostTags_UnknownHost_ReturnsEmpty(t *testing.T) {
 	}
 }
 
+func TestFileTags_UnknownFile_ReturnsEmpty(t *testing.T) {
+	r := New()
+	if tags := r.FileTags("/nonexistent/file"); len(tags) != 0 {
+		t.Errorf("expected empty tags, got %v", tags)
+	}
+}
+
 func TestValidate_Valid(t *testing.T) {
 	if err := Validate([]string{"production", "web", "v2"}); err != nil {
 		t.Errorf("unexpected error: %v", err)
